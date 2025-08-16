@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Iris Flower Prediction</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>Dự đoán loài hoa Iris</h1>
+    <form method="post">
+      <div class="form-group">
+        <label>Sepal Length (cm)</label>
+        <input type="number" step="0.1" name="sepal_length" required>
+      </div>
+      <div class="form-group">
+        <label>Sepal Width (cm)</label>
+        <input type="number" step="0.1" name="sepal_width" required>
+      </div>
+      <div class="form-group">
+        <label>Petal Length (cm)</label>
+        <input type="number" step="0.1" name="petal_length" required>
+      </div>
+      <div class="form-group">
+        <label>Petal Width (cm)</label>
+        <input type="number" step="0.1" name="petal_width" required>
+      </div>
+      <button type="submit">Dự đoán</button>
+    </form>
+
+    {% if prediction %}
+      <div class="result">
+        Kết quả: <strong>{{ prediction }}</strong>
+      </div>
+    {% endif %}
+
+    <hr>
+
+    <h2>Thông tin mô hình</h2>
+    <p>Độ chính xác: <b>{{ accuracy }}%</b></p>
+
+    <h3>Báo cáo phân loại</h3>
+    <table border="1" cellpadding="5" cellspacing="0" style="margin:auto;">
+      <tr>
+        <th>Loài</th>
+        <th>Precision</th>
+        <th>Recall</th>
+        <th>F1-score</th>
+      </tr>
+      {% for label, metrics in report.items() if label in ['Iris-setosa','Iris-versicolor','Iris-virginica'] %}
+      <tr>
+        <td>{{ label }}</td>
+        <td>{{ "%.2f"|format(metrics['precision']) }}</td>
+        <td>{{ "%.2f"|format(metrics['recall']) }}</td>
+        <td>{{ "%.2f"|format(metrics['f1-score']) }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+
+    <h3>Confusion Matrix</h3>
+    <img src="{{ image_path }}" alt="Confusion Matrix" width="300">
+  </div>
+</body>
+</html>
